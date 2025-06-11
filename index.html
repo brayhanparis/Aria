@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -21,7 +20,6 @@
       top: 0;
       z-index: 1000;
       transition: all 0.3s ease;
-      flex-wrap: wrap;
     }
     header.scrolled {
       padding: 10px 30px;
@@ -49,7 +47,6 @@
       display: flex;
       align-items: center;
       gap: 30px;
-      flex-wrap: wrap;
     }
     nav a {
       text-decoration: none;
@@ -145,18 +142,44 @@
     .hero h2 {
       font-size: 3rem;
     }
-    .products {
-      padding: 40px 20px;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
+    .filters {
+      text-align: center;
+      margin-top: 30px;
+    }
+    .filter-btn {
+      margin: 5px;
+      padding: 10px 20px;
+      border: none;
+      background: #eee;
+      cursor: pointer;
+      font-weight: 600;
+      border-radius: 5px;
+      transition: background 0.3s;
+    }
+    .filter-btn:hover {
+      background: #ddd;
+    }
+    .filter-btn.active {
+      background: #000;
+      color: #fff;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     .product {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.6s ease forwards;
       border: 1px solid #eee;
       border-radius: 10px;
       overflow: hidden;
       transition: transform 0.2s;
     }
+    .product:nth-child(1) { animation-delay: 0.1s; }
+    .product:nth-child(2) { animation-delay: 0.2s; }
+    .product:nth-child(3) { animation-delay: 0.3s; }
+    .product:nth-child(4) { animation-delay: 0.4s; }
     .product:hover {
       transform: scale(1.03);
     }
@@ -175,6 +198,16 @@
     .product-info p {
       color: #777;
     }
+    .product.hidden {
+      opacity: 0 !important;
+      transform: scale(0.95) !important;
+      pointer-events: none;
+      height: 0;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      animation: none !important;
+    }
     footer {
       background: #333;
       color: #fff;
@@ -190,14 +223,20 @@
         flex-direction: column;
         width: 100%;
         gap: 10px;
+        background: white;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        z-index: 1000;
       }
       nav.active {
         display: flex;
       }
       header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
+        flex-wrap: wrap;
+        align-items: center;
       }
       .hero h2 {
         font-size: 2rem;
@@ -245,15 +284,22 @@
     <h2>Descubre tu estilo</h2>
   </section>
 
+  <div class="filters">
+    <button class="filter-btn active" onclick="filterProducts('all', this)">Todos</button>
+    <button class="filter-btn" onclick="filterProducts('mujer', this)">Mujer</button>
+    <button class="filter-btn" onclick="filterProducts('hombre', this)">Hombre</button>
+    <button class="filter-btn" onclick="filterProducts('accesorios', this)">Accesorios</button>
+  </div>
+
   <section class="products" id="productos">
-    <div class="product">
-      <img src="https://cdn.pixabay.com/photo/2016/03/23/14/36/t-shirt-1278404_1280.png" alt="Producto 1">
+    <div class="product mujer">
+      <img src="https://via.placeholder.com/400x300" alt="Producto 1">
       <div class="product-info">
         <h3>Camiseta Blanca</h3>
         <p>$25.00</p>
       </div>
     </div>
-    <div class="product">
+    <div class="product hombre">
       <img src="https://via.placeholder.com/400x300" alt="Producto 2">
       <div class="product-info">
         <h3>Pantalón Negro</h3>
@@ -290,6 +336,23 @@
       const nav = document.getElementById('navMenu');
       nav.classList.toggle('active');
     }
+
+    function filterProducts(category, btn) {
+      const products = document.querySelectorAll('.product');
+      const buttons = document.querySelectorAll('.filter-btn');
+
+      buttons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      products.forEach(product => {
+        if (category === 'all' || product.classList.contains(category)) {
+          product.classList.remove('hidden');
+        } else {
+          product.classList.add('hidden');
+        }
+      });
+    }
   </script>
 </body>
 </html>
+
